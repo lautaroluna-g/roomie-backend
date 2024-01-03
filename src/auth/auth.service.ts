@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import * as bcryptjs from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
-import { Resend } from 'resend';
 
 
 import { User } from './entities/user.entity';
@@ -38,20 +37,10 @@ export class AuthService {
       
       const {password:_, ...user} = newUser.toJSON()
 
-      const resend = new Resend('re_aHtiLQDg_Ln7JiyvoPGV6SsWHNEhehAb4');
-
-      resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: user.email,
-        subject: 'Register on AngularApp',
-        html: `<p>Welcome <strong>@${user.username}</strong>!</p>`
-      });
-
-
       return user
 
     } catch (error) {
-      // console.log(error.code)
+      console.log(error.code)
       if (error.code ===11000){
         throw new BadRequestException(`${createUserDto.email} already exist`)
       }
@@ -100,7 +89,9 @@ export class AuthService {
   }
 
   async findUserById( id: string) {
+    console.log('ID ', id);
     const user = await this.userModel.findById(id)
+    console.log(' user ', user)
     const {password, ...rest} = user.toJSON()
     return rest
   }

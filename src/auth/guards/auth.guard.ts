@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger, ParseUUIDPipe, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
+import { log } from 'console';
+import { JwtPayload } from '../interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,11 +24,14 @@ constructor(
     }
     try {
 
-      const payload = await this.jwtService.verifyAsync(
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(
         token,{secret: process.env.JWT_SEED}
       );
-
+      
+      console.log('TOKEN ', token)
+      console.log('PAYLOAD ', payload)
       const user = await this.authService.findUserById( payload.id )
+    
       if ( !user ) throw new UnauthorizedException('User does not exists');
       if ( !user.isActive) throw new UnauthorizedException('User is not active');
 
