@@ -35,7 +35,7 @@ constructor(
       if ( !user ) throw new UnauthorizedException('User does not exists');
       if ( !user.isActive) throw new UnauthorizedException('User is not active');
 
-      request['user'] = payload;
+      request['user'] = user;
 
 
     } catch {
