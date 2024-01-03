@@ -7,6 +7,7 @@ import { CreateUserDto, LoginDto, RegisterUserDto, UpdateAuthDto } from './dto'
 import { AuthGuard } from './guards/auth.guard';
 import { User } from './entities/user.entity';
 import { LoginResponse } from './interfaces/login-response.interfaces';
+import { log } from 'console';
 
 @Controller('/auth')
 export class AuthController {
@@ -37,10 +38,12 @@ export class AuthController {
   @UseGuards( AuthGuard )
   @Get('/check-token')
   checkToken( @Request() req: Request ): LoginResponse{
-    const user = req['user'] as User
+    const user = req['user']
+    console.log('AHORA', user.id);
+    
     return {
       user:user,
-      token: this.authService.getJWT({id: user._id})
+      token: this.authService.getJWT({id: user.id})
     }
   }
 

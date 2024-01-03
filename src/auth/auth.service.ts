@@ -72,7 +72,7 @@ export class AuthService {
     }
 
     const {password:_, ...other} = user.toJSON()
-
+    
     return {
       user: other,
       token:this.getJWT({id:user.id})
@@ -80,7 +80,7 @@ export class AuthService {
   }
 
   getJWT( payload: JwtPayload){
-    const token= this.jwtService.sign(payload)
+    const token= this.jwtService.sign(payload,{secret:process.env.JWT_SEED})
     return token
   }
 

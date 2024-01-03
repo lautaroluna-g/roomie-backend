@@ -24,7 +24,7 @@ constructor(
     }
     try {
 
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(
+      const payload = await this.jwtService.verify(
         token,{secret: process.env.JWT_SEED}
       );
       
